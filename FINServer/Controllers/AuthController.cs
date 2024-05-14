@@ -6,7 +6,7 @@ using System.Data;
 
 namespace FINServer.Controllers
 {
-    [Route("/register")]
+    
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -20,6 +20,7 @@ namespace FINServer.Controllers
         }
         
         [HttpPost]
+        [Route("/register")]
         public async Task<IActionResult> Register([FromBody] Register model)
         {
             try
@@ -30,6 +31,24 @@ namespace FINServer.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error registering user: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        [Route("/login")]
+        public async Task<IActionResult> Login([FromBody] Login model)
+        {
+            try
+            {
+                bool loginSuccess = await _userRepository.LoginCustomerAsync(model);
+                if (loginSuccess)
+                    return Ok("Login successful");
+                else
+                    return Unauthorized("Invalid email or password");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error logging in: {ex.Message}");
             }
         }
 

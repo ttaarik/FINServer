@@ -30,5 +30,24 @@ namespace FINServer.Repositories
                 }
             }
         }
+
+        public async Task<bool> LoginCustomerAsync(Login login)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                var query = "SELECT COUNT(*) FROM customers WHERE email = @email AND password = @password";
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@email", login.Email);
+                    command.Parameters.AddWithValue("@password", login.Password);
+                    var result = await command.ExecuteScalarAsync();
+
+                    // Überprüfen, ob ein Benutzer mit den angegebenen Anmeldeinformationen gefunden wurde
+                    return Convert.ToInt32(result) > 0;
+                }
+            }
+        }
     }
 }
