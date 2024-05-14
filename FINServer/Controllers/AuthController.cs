@@ -6,7 +6,8 @@ using System.Data;
 
 namespace FINServer.Controllers
 {
-    
+    //TODO
+    //Sessions im Backend mit Microsoft.AspNetCore.Session oder so
     [ApiController]
     public class AuthController : ControllerBase
     {
