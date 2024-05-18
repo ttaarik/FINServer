@@ -1,8 +1,14 @@
 ﻿using FINServer.Models;
 using FINServer.Repositories;
+using Google.Protobuf.Reflection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Mysqlx.Session;
 using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace FINServer.Controllers
 {
@@ -43,7 +49,11 @@ namespace FINServer.Controllers
             {
                 bool loginSuccess = await _userRepository.LoginCustomerAsync(model);
                 if (loginSuccess)
-                    return Ok("Login successful");
+                {
+                    var token = Generate(model);
+                    return Ok(token);
+                }
+
                 else
                     return Unauthorized("Invalid email or password");
             }
@@ -52,6 +62,48 @@ namespace FINServer.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error logging in: {ex.Message}");
             }
         }
+
+        private string Generate(Login user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddMinutes(15),
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+
+        //Der Login Basic klappt
+        //[HttpPost]
+        //[Route("/login")]
+        //public async Task<IActionResult> Login([FromBody] Login model)
+        //{
+        //    try
+        //    {
+        //        bool loginSuccess = await _userRepository.LoginCustomerAsync(model);
+        //        if (loginSuccess)
+        //            return Ok("Login successful");
+
+            //        //Create Token
+
+            //        else
+            //            return Unauthorized("Invalid email or password");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        return StatusCode(StatusCodes.Status500InternalServerError, $"Error logging in: {ex.Message}");
+            //    }
+            //}
 
     }
 }
