@@ -47,15 +47,17 @@ namespace FINServer.Controllers
         {
             try
             {
-                bool loginSuccess = await _userRepository.LoginCustomerAsync(model);
-                if (loginSuccess)
+                Customer customer = await _userRepository.GetCustomerByEmail(model.Email, model.Password);
+
+                if (customer != null && customer.Password == model.Password)
                 {
-                    var token = Generate(model);
+                    var token = Generate(customer);
                     return Ok(token);
                 }
-
                 else
+                {
                     return Unauthorized("Invalid email or password");
+                }
             }
             catch (Exception ex)
             {
@@ -63,14 +65,20 @@ namespace FINServer.Controllers
             }
         }
 
-        private string Generate(Login user)
+
+
+        private string Generate(Customer customer)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Email, customer.Email),
+                // Zusätzliche Benutzerdaten hinzufügen
+                new Claim("first_name", customer.FirstName), // Vorname
+                new Claim("last_name", customer.LastName)    // Nachname
+                // Weitere Claims hinzufügen, falls erforderlich
             };
 
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
@@ -81,6 +89,9 @@ namespace FINServer.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
+
 
 
         //Der Login Basic klappt
@@ -94,16 +105,16 @@ namespace FINServer.Controllers
         //        if (loginSuccess)
         //            return Ok("Login successful");
 
-            //        //Create Token
+        //        //Create Token
 
-            //        else
-            //            return Unauthorized("Invalid email or password");
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        return StatusCode(StatusCodes.Status500InternalServerError, $"Error logging in: {ex.Message}");
-            //    }
-            //}
+        //        else
+        //            return Unauthorized("Invalid email or password");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, $"Error logging in: {ex.Message}");
+        //    }
+        //}
 
     }
 }

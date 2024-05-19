@@ -1,6 +1,9 @@
 ﻿using FINServer.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
+using FINServer.Models;
 using System.Threading.Tasks;
 
 
@@ -9,6 +12,10 @@ namespace FINServer.Repositories
     public class CustomerRepository
     {
         private readonly string _connectionString;
+        //Fehler hier in Zeile 23, 
+
+        private readonly DbContext _context;
+
 
         public CustomerRepository(IConfiguration configuration)
         {
@@ -31,6 +38,7 @@ namespace FINServer.Repositories
             }
         }
 
+
         public async Task<bool> LoginCustomerAsync(Login login)
         {
             using (var connection = new MySqlConnection(_connectionString))
@@ -49,5 +57,58 @@ namespace FINServer.Repositories
                 }
             }
         }
+
+        //Und das ist auch falsch, TODO: Wie kriege ich mithilfe des Tokens den User und seinen Firstname, Lastname
+
+        //public async Task<Customer> GetCustomerByTokenAsync(string token)
+        //{
+        //    // Finde den Benutzer anhand des Tokens
+        //    var user = await _context.Customers.FirstOrDefaultAsync(c => c.Token == token);
+        //    return user;
+        //}
+
+
+
+
+
+
+
+
+
+        public async Task<Customer> GetCustomerByEmail(string email, string password)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                var query = "SELECT * FROM customers WHERE email = @email";
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@email", email);
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            // Kundenobjekt erstellen und Daten aus der Datenbank lesen
+                            var storedPasswordHash = reader.GetString(reader.GetOrdinal("password"));
+                            
+                                return new Customer
+                                {
+                                    Email = reader.GetString(reader.GetOrdinal("email")),
+                                    FirstName = reader.GetString(reader.GetOrdinal("first_name")),
+                                    LastName = reader.GetString(reader.GetOrdinal("last_name")),
+                                    Password = storedPasswordHash
+                                    // Weitere Eigenschaften hinzufügen, falls erforderlich
+                                };
+                            
+                        }
+                        // Keinen Kunden mit der angegebenen E-Mail oder Passwort gefunden
+                        return null;
+                    }
+                }
+            }
+        }
+
+
     }
 }
