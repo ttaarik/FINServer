@@ -42,6 +42,7 @@ namespace FINServer
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<CustomerRepository>();
+            builder.Services.AddScoped<AccountRepository>();
 
 
             

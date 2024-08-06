@@ -12,8 +12,6 @@ namespace FINServer.Repositories
     public class CustomerRepository
     {
         private readonly string _connectionString;
-        //Fehler hier in Zeile 23, 
-
         private readonly DbContext _context;
 
 
@@ -69,12 +67,6 @@ namespace FINServer.Repositories
 
 
 
-
-
-
-
-
-
         public async Task<Customer> GetCustomerByEmail(string email, string password)
         {
             using (var connection = new MySqlConnection(_connectionString))
@@ -94,6 +86,7 @@ namespace FINServer.Repositories
                             
                                 return new Customer
                                 {
+                                    CustomerId = reader.GetInt32(reader.GetOrdinal("customer_id")),
                                     Email = reader.GetString(reader.GetOrdinal("email")),
                                     FirstName = reader.GetString(reader.GetOrdinal("first_name")),
                                     LastName = reader.GetString(reader.GetOrdinal("last_name")),

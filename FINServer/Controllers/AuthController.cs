@@ -12,8 +12,6 @@ using System.Text;
 
 namespace FINServer.Controllers
 {
-    //TODO
-    //Sessions im Backend mit Microsoft.AspNetCore.Session oder so
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -42,7 +40,7 @@ namespace FINServer.Controllers
         }
 
         [HttpPost]
-        [Route("/login")]
+        [Route("/login")] 
         public async Task<IActionResult> Login([FromBody] Login model)
         {
             try
@@ -74,7 +72,9 @@ namespace FINServer.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, customer.Email),
+                
+                new Claim("email", customer.Email),
+                new Claim("customer_id", Convert.ToString(customer.CustomerId)),
                 // Zusätzliche Benutzerdaten hinzufügen
                 new Claim("first_name", customer.FirstName), // Vorname
                 new Claim("last_name", customer.LastName)    // Nachname
