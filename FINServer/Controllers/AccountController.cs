@@ -43,7 +43,7 @@ namespace FINServer.Controllers
             return new JsonResult(table);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("/id")]
         public JsonResult Get(int id)
         {
