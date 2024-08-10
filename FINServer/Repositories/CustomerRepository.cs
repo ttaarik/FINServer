@@ -83,16 +83,17 @@ namespace FINServer.Repositories
                         {
                             // Kundenobjekt erstellen und Daten aus der Datenbank lesen
                             var storedPasswordHash = reader.GetString(reader.GetOrdinal("password"));
-                            
-                                return new Customer
-                                {
-                                    CustomerId = reader.GetInt32(reader.GetOrdinal("customer_id")),
-                                    Email = reader.GetString(reader.GetOrdinal("email")),
-                                    FirstName = reader.GetString(reader.GetOrdinal("first_name")),
-                                    LastName = reader.GetString(reader.GetOrdinal("last_name")),
-                                    Password = storedPasswordHash
-                                    // Weitere Eigenschaften hinzufügen, falls erforderlich
-                                };
+
+                            return new Customer
+                            {
+                                CustomerId = reader.GetInt32(reader.GetOrdinal("customer_id")),
+                                Email = reader.GetString(reader.GetOrdinal("email")),
+                                FirstName = reader.GetString(reader.GetOrdinal("first_name")),
+                                LastName = reader.GetString(reader.GetOrdinal("last_name")),
+                                Password = storedPasswordHash,
+                                Income = reader.GetDecimal(reader.GetOrdinal("income"))
+                                // Weitere Eigenschaften hinzufügen, falls erforderlich
+                            };
                             
                         }
                         // Keinen Kunden mit der angegebenen E-Mail oder Passwort gefunden
