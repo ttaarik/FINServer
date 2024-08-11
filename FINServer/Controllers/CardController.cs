@@ -11,21 +11,19 @@ namespace FINServer.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class SubscriptionController : ControllerBase
+    public class CardController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly SubscriptionRepository _subscriptionRepository;
 
-        public SubscriptionController(IConfiguration configuration, SubscriptionRepository subscriptionRepository)
+        public CardController(IConfiguration configuration)
         {
             _configuration = configuration;
-            _subscriptionRepository = subscriptionRepository;
         }
 
         [HttpGet]
         public JsonResult Get()
         {
-            string query = @"SELECT * FROM `subscriptions`;";
+            string query = @"SELECT * FROM `cards`;";
             DataTable table = new DataTable();
 
             string sqlDataSource = _configuration.GetConnectionString("DefaultConnection");
@@ -39,7 +37,6 @@ namespace FINServer.Controllers
                     myReader.Close();
                 }
             }
-
             return new JsonResult(table);
         }
 
@@ -48,7 +45,7 @@ namespace FINServer.Controllers
 
         public JsonResult Get(int id)
         {
-            string query = @"SELECT * FROM `subscriptions` WHERE customer_id = " + id + ";";
+            string query = @"SELECT * FROM `cards` WHERE customer_id = " + id + ";";
             DataTable table = new DataTable();
 
             string sqlDataSource = _configuration.GetConnectionString("DefaultConnection");
