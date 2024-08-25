@@ -3,10 +3,10 @@
     public class Transaction
     {
         public int TransactionID { get; set; }
-        public int AccountID { get; set; }
+        public int SenderAccountID { get; set; }
+        public int RecieverAccountID { get; set; }
         public decimal Amount { get; set; }
         public TransActionType TransactionType { get; set; }
-        public int TargetAccountId { get; set; }
         public DateTime TimeStamp { get; set; }
         public string Description { get; set; }
     }
@@ -15,6 +15,7 @@
     {
         Withdrawal,
         Deposit,
-        Transfer
+        Transfer,
+        Gehalt
     }
 }

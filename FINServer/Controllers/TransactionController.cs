@@ -46,11 +46,12 @@ namespace FINServer.Controllers
         public JsonResult Get(int id)
         {
             string query = $@"SELECT t.transaction_id, t.amount, t.transaction_type, t.timestamp, t.description, 
-                            t.target_account_id, a2.customer_id AS target_customer_id
-                            FROM transactions t
-                            JOIN accounts a ON t.account_id = a.account_id
-                            LEFT JOIN accounts a2 ON t.target_account_id = a2.account_id
-                            WHERE a.customer_id = {id};";
+                t.sender_account_id, t.receiver_account_id
+                FROM transactions t
+                JOIN accounts a1 ON t.sender_account_id = a1.account_id
+                LEFT JOIN accounts a2 ON t.receiver_account_id = a2.account_id
+                WHERE a1.customer_id = {id} OR a2.customer_id = {id};";
+
             DataTable table = new DataTable();
 
             string sqlDataSource = _configuration.GetConnectionString("DefaultConnection");
