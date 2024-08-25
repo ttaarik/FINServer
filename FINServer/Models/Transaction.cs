@@ -4,7 +4,7 @@
     {
         public int TransactionID { get; set; }
         public int SenderAccountID { get; set; }
-        public int RecieverAccountID { get; set; }
+        public int ReceiverAccountID { get; set; }
         public decimal Amount { get; set; }
         public TransActionType TransactionType { get; set; }
         public DateTime TimeStamp { get; set; }
