@@ -52,23 +52,5 @@ namespace FINServer.Controllers
 
             return new JsonResult(table);
         }
-
-        //[HttpGet("current")]
-        //public async Task<IActionResult> GetCurrentCustomer()
-        //{
-        //    var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-        //    if (token == null)
-        //    {
-        //        return Unauthorized();
-        //    }
-
-        //    var user = await _customerRepository.GetCustomerByTokenAsync(token);
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok(user);
-        //}
     }
 }

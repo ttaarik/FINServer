@@ -26,11 +26,16 @@ namespace FINServer.Repositories
             {
                 await connection.OpenAsync();
 
-                var query = "INSERT INTO customers (email, password) VALUES (@email, @password)";
+                var query = "INSERT INTO customers (email, password, first_name, last_name, plz, city) VALUES (@email, @password, @first_name, @last_name, @plz, @city)";
                 using (var command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@email", Register.Email);
                     command.Parameters.AddWithValue("@password", Register.Password);
+                    command.Parameters.AddWithValue("@first_name", Register.FirstName);
+                    command.Parameters.AddWithValue("@last_name", Register.LastName);
+                    command.Parameters.AddWithValue("@plz", Register.PLZ);
+                    command.Parameters.AddWithValue("@city", Register.City);
+
                     await command.ExecuteNonQueryAsync();
                 }
             }
@@ -55,15 +60,6 @@ namespace FINServer.Repositories
                 }
             }
         }
-
-        //Und das ist auch falsch, TODO: Wie kriege ich mithilfe des Tokens den User und seinen Firstname, Lastname
-
-        //public async Task<Customer> GetCustomerByTokenAsync(string token)
-        //{
-        //    // Finde den Benutzer anhand des Tokens
-        //    var user = await _context.Customers.FirstOrDefaultAsync(c => c.Token == token);
-        //    return user;
-        //}
 
 
 
