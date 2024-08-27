@@ -2,8 +2,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 
-# Kopiere die Projektdateien und restore die Abhängigkeiten
-COPY *.csproj ./
+# Kopiere die .sln-Datei und restore die Abhängigkeiten
+COPY *.sln ./
 RUN dotnet restore
 
 # Kopiere den Rest des Codes und baue das Projekt
