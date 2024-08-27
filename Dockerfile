@@ -2,8 +2,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 
-# Kopiere csproj und restore die Abhängigkeiten
-COPY *.cs ./
+# Kopiere die Projektdateien und restore die Abhängigkeiten
+COPY *.csproj ./
 RUN dotnet restore
 
 # Kopiere den Rest des Codes und baue das Projekt
@@ -16,4 +16,4 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 # Starte die Anwendung
-ENTRYPOINT ["dotnet", "FINServer.sln"]
+ENTRYPOINT ["dotnet", "FINServer.dll"]
