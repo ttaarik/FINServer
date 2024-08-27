@@ -6,4 +6,4 @@ WORKDIR /app
 COPY *.csproj ./
 
 # Führe das C#-Skript direkt aus
-ENTRYPOINT ["dotnet", "run", "Program.cs"]
+ENTRYPOINT ["dotnet", "run", "FINServer.sln"]
