@@ -12,7 +12,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 
 # Arbeitsverzeichnis erstellen
-WORKDIR /app
+WORKDIR /FINServer
 
 # .csproj-Dateien kopieren und Abhängigkeiten wiederherstellen
 COPY *.csproj ./
