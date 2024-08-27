@@ -18,4 +18,4 @@ COPY *.cs ./
 
 
 # Definiere den Einstiegspunkt für das Docker-Image
-ENTRYPOINT ["dotnet", "Program.cs"]
+ENTRYPOINT ["dotnet", "run", "FINServer.sln"]
