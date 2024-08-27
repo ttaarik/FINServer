@@ -18,14 +18,6 @@ WORKDIR /app
 COPY *.csproj ./
 RUN dotnet restore
 
-# Restliche Dateien kopieren und Projekt erstellen
-COPY . ./
-RUN dotnet publish -c Release -o out
-
-# Das Runtime-Image erstellen
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
-WORKDIR /app
-COPY --from=build /app/out ./
 
 # Definiere den Einstiegspunkt für das Docker-Image
 ENTRYPOINT ["dotnet", "run", "FINServer.dll"]
