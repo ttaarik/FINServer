@@ -16,4 +16,4 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 # Starte die Anwendung
-ENTRYPOINT ["dotnet", "FINServer.dll"]
+ENTRYPOINT ["dotnet", "FINServer.sln"]
