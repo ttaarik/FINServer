@@ -14,21 +14,8 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
 
 # Kopiere die Projektdateien
-COPY *.csproj ./
+COPY *.cs ./
 
-# Wiederherstellung der Abhängigkeiten
-RUN dotnet restore
-
-# Kopiere den Rest des Quellcodes in das Arbeitsverzeichnis
-COPY . ./
-
-# Erstelle das Projekt und veröffentliche die Ausgabe im Verzeichnis 'out'
-RUN dotnet publish -c Release -o out
-
-# Verwenden des .NET Runtime-Images für die Ausführung
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
-WORKDIR /app
-COPY --from=build /app/out ./
 
 # Definiere den Einstiegspunkt für das Docker-Image
 ENTRYPOINT ["dotnet", "FINServer.dll"]
