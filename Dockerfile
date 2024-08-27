@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 
 # Kopiere alle C#-Dateien
-COPY *.cs ./
+COPY *.csproj ./
 
 # Führe das C#-Skript direkt aus
-ENTRYPOINT ["dotnet", "run", "FINServer.sln"]
+ENTRYPOINT ["dotnet", "run", "Program.cs"]
