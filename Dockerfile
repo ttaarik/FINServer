@@ -16,7 +16,6 @@ WORKDIR /app
 
 # .csproj-Dateien kopieren und Abhängigkeiten wiederherstellen
 COPY *.csproj ./
-RUN dotnet restore
 
 
 # Definiere den Einstiegspunkt für das Docker-Image
