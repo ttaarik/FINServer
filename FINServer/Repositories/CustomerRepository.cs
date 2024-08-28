@@ -1,10 +1,6 @@
 ﻿using FINServer.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
-using FINServer.Models;
-using System.Threading.Tasks;
 
 
 namespace FINServer.Repositories
@@ -19,7 +15,7 @@ namespace FINServer.Repositories
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
-        
+
         public async Task AddCustomerAsync(Register Register)
         {
             using (var connection = new MySqlConnection(_connectionString))
@@ -90,7 +86,7 @@ namespace FINServer.Repositories
                                 Income = reader.GetDecimal(reader.GetOrdinal("income"))
                                 // Weitere Eigenschaften hinzufügen, falls erforderlich
                             };
-                            
+
                         }
                         // Keinen Kunden mit der angegebenen E-Mail oder Passwort gefunden
                         return null;

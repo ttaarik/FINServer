@@ -1,11 +1,7 @@
 ﻿using FINServer.Models;
 using FINServer.Repositories;
-using Google.Protobuf.Reflection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Mysqlx.Session;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -23,7 +19,7 @@ namespace FINServer.Controllers
             _configuration = configuration;
             _userRepository = userRepository;
         }
-        
+
         [HttpPost]
         [Route("/register")]
         public async Task<IActionResult> Register([FromBody] Register model)
@@ -40,7 +36,7 @@ namespace FINServer.Controllers
         }
 
         [HttpPost]
-        [Route("/login")] 
+        [Route("/login")]
         public async Task<IActionResult> Login([FromBody] Login model)
         {
             try
@@ -72,7 +68,7 @@ namespace FINServer.Controllers
 
             var claims = new List<Claim>
             {
-                
+
                 new Claim("email", customer.Email),
                 new Claim("customer_id", Convert.ToString(customer.CustomerId)),
                 // Zusätzliche Benutzerdaten hinzufügen

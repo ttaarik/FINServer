@@ -1,7 +1,4 @@
-﻿using FINServer.Data;
-using FINServer.Models;
-using FINServer.Repositories;
-using Microsoft.AspNetCore.Http;
+﻿using FINServer.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;

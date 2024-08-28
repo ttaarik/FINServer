@@ -3,8 +3,6 @@ using FINServer.Data;
 using FINServer.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using System.Text;
@@ -33,7 +31,7 @@ namespace FINServer
             });
 
             builder.Services.AddControllersWithViews().AddNewtonsoftJson(options => options.SerializerSettings.
-            ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore).AddNewtonsoftJson(options =>
+            ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore).AddNewtonsoftJson(options =>
             options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
 
@@ -46,13 +44,13 @@ namespace FINServer
             builder.Services.AddScoped<SubscriptionRepository>();
 
 
-            
+
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    
+
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,

@@ -1,10 +1,6 @@
 ﻿using FINServer.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
-using FINServer.Models;
-using System.Threading.Tasks;
 
 namespace FINServer.Repositories
 {
