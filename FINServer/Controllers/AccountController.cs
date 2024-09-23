@@ -1,6 +1,5 @@
-﻿using FINServer.Repositories;
+﻿using FINServer.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using System.Data;
 
@@ -11,14 +10,13 @@ namespace FINServer.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly AccountRepository _accountRepository;
 
-        public AccountController(IConfiguration configuration, AccountRepository accountRepository)
+        public AccountController(IConfiguration configuration)
         {
             _configuration = configuration;
-            _accountRepository = accountRepository;
         }
 
+        // 1. Alle Konten abrufen
         [HttpGet]
         public JsonResult Get()
         {
@@ -40,11 +38,11 @@ namespace FINServer.Controllers
             return new JsonResult(table);
         }
 
-        [HttpGet]
-        [Route("/id")]
+        // 2. Konten für einen bestimmten Kunden abrufen
+        [HttpGet("{id}")]
         public JsonResult Get(int id)
         {
-            string query = @"SELECT * FROM `accounts` WHERE customer_id = " + id + ";";
+            string query = @"SELECT * FROM `accounts` WHERE customer_id = @CustomerId;";
             DataTable table = new DataTable();
 
             string sqlDataSource = _configuration.GetConnectionString("DefaultConnection");
@@ -53,6 +51,7 @@ namespace FINServer.Controllers
                 mycon.Open();
                 using (MySqlCommand myCommand = new MySqlCommand(query, mycon))
                 {
+                    myCommand.Parameters.AddWithValue("@CustomerId", id);
                     MySqlDataReader myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -62,20 +61,74 @@ namespace FINServer.Controllers
             return new JsonResult(table);
         }
 
+        // 3. Neues Konto hinzufügen
+        [HttpPost]
+        public JsonResult Post(Account account)
+        {
+            string query = @"
+                INSERT INTO accounts (customer_id, account_type, balance)
+                VALUES (@CustomerId, @AccountType, @Balance);";
 
-        //[HttpPost]
-        //[Route("/acc")]
-        //public async Task<IActionResult> Account([FromBody] int id)
-        //{
-        //    try
-        //    {
-        //        await _accountRepository.GetAccountById(id);
-        //        return Ok("nice");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, $"Error registering user: {ex.Message}");
-        //    }
-        //}
+            string sqlDataSource = _configuration.GetConnectionString("DefaultConnection");
+            using (MySqlConnection mycon = new MySqlConnection(sqlDataSource))
+            {
+                mycon.Open();
+                using (MySqlCommand myCommand = new MySqlCommand(query, mycon))
+                {
+                    myCommand.Parameters.AddWithValue("@CustomerId", account.CustomerId);
+                    myCommand.Parameters.AddWithValue("@AccountType", account.AccountType.ToString());
+                    myCommand.Parameters.AddWithValue("@Balance", account.Balance);
+                    myCommand.ExecuteNonQuery();
+                }
+            }
+
+            return new JsonResult("Account added successfully");
+        }
+
+        // 4. Bestehendes Konto aktualisieren
+        [HttpPut]
+        public JsonResult Put(Account account)
+        {
+            string query = @"
+                UPDATE accounts
+                SET customer_id = @CustomerId, account_type = @AccountType, balance = @Balance
+                WHERE account_id = @AccountId;";
+
+            string sqlDataSource = _configuration.GetConnectionString("DefaultConnection");
+            using (MySqlConnection mycon = new MySqlConnection(sqlDataSource))
+            {
+                mycon.Open();
+                using (MySqlCommand myCommand = new MySqlCommand(query, mycon))
+                {
+                    myCommand.Parameters.AddWithValue("@AccountId", account.AccountId);
+                    myCommand.Parameters.AddWithValue("@CustomerId", account.CustomerId);
+                    myCommand.Parameters.AddWithValue("@AccountType", account.AccountType.ToString());
+                    myCommand.Parameters.AddWithValue("@Balance", account.Balance);
+                    myCommand.ExecuteNonQuery();
+                }
+            }
+
+            return new JsonResult("Account updated successfully");
+        }
+
+        // 5. Konto löschen
+        [HttpDelete("{id}")]
+        public JsonResult Delete(int id)
+        {
+            string query = @"DELETE FROM accounts WHERE account_id = @AccountId;";
+
+            string sqlDataSource = _configuration.GetConnectionString("DefaultConnection");
+            using (MySqlConnection mycon = new MySqlConnection(sqlDataSource))
+            {
+                mycon.Open();
+                using (MySqlCommand myCommand = new MySqlCommand(query, mycon))
+                {
+                    myCommand.Parameters.AddWithValue("@AccountId", id);
+                    myCommand.ExecuteNonQuery();
+                }
+            }
+
+            return new JsonResult("Account deleted successfully");
+        }
     }
 }
